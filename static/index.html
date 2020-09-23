@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="msg">
+    <button id="send">send</button>
+    <script>
+        ws = new WebSocket(`ws://localhost:8899/socket`)
+        // 開啟後執行的動作，指定一個 function 會在連結 WebSocket 後執行
+        ws.onopen = () => {
+            console.log("OPEN");
+        }
+        // 關閉後執行的動作，指定一個 function 會在連結中斷後執行
+        ws.onclose = () => {
+            console.log("CLOSE");
+            ws = null;
+        }
+        // 接收 Server 發送的訊息
+        ws.onmessage = (e) => {
+            console.log("RESPONSE: " + e.data);
+        }
+        ws.onerror = (e) => {
+            console.log("ERROR: " + e.data);
+        }
+
+        document.getElementById("send").onclick = () => {
+            var msg = document.getElementById("msg").value
+            console.log("SEND: " + msg);
+            ws.send(msg)
+            return false;
+        }
+    </script>
+
+</body>
+
+</html>
